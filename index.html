@@ -3,26 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Nilai UAS Semester 3 Sistem Informasi</title>
+    <title>Kalkulator Nilai UAS Modern - Sistem Informasi</title>
     <style>
-        /* CSS Reset & Variables */
+        /* --- CSS Variables & Reset --- */
         :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --bg: #f3f4f6;
+            --primary-gradient: linear-gradient(135deg, #3b82f6, #2563eb);
+            --bg-gradient: radial-gradient(circle at top left, #f8fafc, #e2e8f0);
             --card-bg: #ffffff;
-            --text-main: #1f2937;
-            --text-muted: #6b7280;
-            --border: #e5e7eb;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            /* Status Colors */
+            --success-color: #10b981; /* Green */
+            --warning-color: #f59e0b; /* Orange/Yellow */
+            --danger-color: #ef4444;  /* Red */
+            --info-color: #0ea5e9;    /* Blue */
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; }
 
         body {
-            background-color: var(--bg);
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
             color: var(--text-main);
             display: flex;
             justify-content: center;
@@ -31,131 +34,159 @@
             padding: 20px;
         }
 
-        /* Container */
+        /* --- Main Container & Animations --- */
         .container {
             background-color: var(--card-bg);
             width: 100%;
-            max-width: 500px;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            max-width: 480px;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            /* Entrance Animation */
+            opacity: 0;
+            transform: translateY(30px);
+            animation: containerEntrance 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
 
-        /* Header */
-        h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-align: center;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
+        @keyframes containerEntrance {
+            to { opacity: 1; transform: translateY(0); }
         }
+
+        /* --- Header Styling --- */
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            text-align: center;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+            transition: transform 0.3s ease;
+        }
+        h1:hover { transform: scale(1.02); }
 
         .subtitle {
             text-align: center;
-            font-size: 0.875rem;
+            font-size: 0.9rem;
+            font-weight: 500;
             color: var(--text-muted);
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+        .subtitle::after {
+            content: ''; display: block; width: 40px; height: 3px; background: var(--border-color);
+            margin: 10px auto 0; border-radius: 2px;
         }
 
-        /* Form Elements */
-        .form-group { margin-bottom: 1.25rem; }
+        /* --- Form Elements Styling --- */
+        .form-group { margin-bottom: 1.5rem; position: relative; }
         
         label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-main);
+            display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-main);
+            margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;
         }
 
         select, input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-            background-color: #fff;
+            width: 100%; padding: 0.85rem 1rem;
+            border: 2px solid var(--border-color); border-radius: 0.75rem;
+            font-size: 1rem; background-color: #f8fafc;
+            transition: all 0.3s ease; appearance: none; /* Remove default arrow */
+        }
+
+        /* Custom arrow for selects */
+        .select-wrapper { position: relative; }
+        .select-wrapper::after {
+            content: '▼'; font-size: 0.8rem; color: var(--text-muted);
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%); pointer-events: none;
         }
 
         select:focus, input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            outline: none; border-color: #3b82f6; background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
         }
 
+        .helper-text { font-size: 0.75rem; color: var(--info-color); margin-top: 6px; display: block; font-weight: 500;}
+
+        /* --- Button Styling --- */
         button {
-            width: 100%;
-            background-color: var(--primary);
-            color: white;
-            padding: 0.75rem;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            margin-top: 1rem;
+            width: 100%; padding: 1rem;
+            background: var(--primary-gradient); color: white;
+            border: none; border-radius: 0.75rem;
+            font-size: 1.1rem; font-weight: 700; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
         }
 
-        button:hover { background-color: var(--primary-hover); }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+        }
+        button:active { transform: translateY(-1px); }
 
-        /* Result Section */
+        /* --- Result Section Animations & Styling --- */
         #result-card {
-            display: none; /* Hidden by default */
-            margin-top: 2rem;
-            background-color: #f8fafc;
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            text-align: center;
-            animation: fadeIn 0.5s ease;
+            display: none; /* Hidden initially */
+            margin-top: 2.5rem;
+            background: linear-gradient(to bottom right, #ffffff, #f1f5f9);
+            border-radius: 1rem; padding: 2rem;
+            text-align: center; border: 1px solid var(--border-color);
+            /* Entrance animation for result card */
+            opacity: 0; transform: scale(0.95);
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .result-enter-active {
+            animation: resultPopUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes resultPopUp {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .score-detail { font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1.2;}
+        .score-sub { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
 
         .grade-badge {
-            display: inline-block;
-            font-size: 3rem;
-            font-weight: 800;
-            line-height: 1;
-            margin: 1rem 0;
+            display: inline-block; font-size: 4rem; font-weight: 900;
+            line-height: 1; margin: 1rem 0 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            /* Initial state for animation */
+            opacity: 0; transform: scale(0.5) rotate(-10deg);
         }
 
-        .score-detail { font-size: 1.125rem; font-weight: 600; color: var(--text-main); }
-        .score-sub { font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem; }
+        /* Animation class triggered by JS */
+        .grade-pop-in {
+            animation: gradeBounce 0.8s cubic-bezier(0.68, -0.55, 0.26.55, 1.55) forwards 0.3s; /* Delay slightly */
+        }
 
-        /* Colors for Grades */
-        .grade-A { color: var(--success); }
-        .grade-B { color: var(--primary); }
-        .grade-C { color: var(--warning); }
-        .grade-D { color: #d97706; }
-        .grade-E { color: var(--danger); }
+        @keyframes gradeBounce {
+            to { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
 
-        /* Explanation */
+        /* Color Classes */
+        .color-A { color: var(--success-color); }
+        .color-B { color: var(--info-color); }
+        .color-C { color: var(--warning-color); }
+        .color-D { color: #d97706; }
+        .color-E { color: var(--danger-color); }
+
+        .info-tag {
+            display: inline-block; background: #e0f2fe; color: #0369a1;
+            padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+        }
+
         .explanation {
-            margin-top: 1.5rem;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            background: #fff;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border: 1px dashed var(--border);
-            text-align: left;
+            margin-top: 2rem; text-align: left; background: #fff;
+            padding: 1.25rem; border-radius: 0.75rem; border: 1px solid var(--border-color);
         }
-        
-        .explanation h3 { font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-main); }
-        .explanation ul { padding-left: 1.2rem; }
-        .explanation li { margin-bottom: 0.25rem; }
+        .explanation h3 { font-size: 0.95rem; margin-bottom: 0.75rem; color: var(--text-main); }
+        .explanation ul li { margin-bottom: 0.4rem; font-size: 0.9rem; color: var(--text-muted); }
+        .explanation li strong { color: var(--text-main); }
 
-        /* Footer */
         footer {
-            margin-top: 2rem;
-            text-align: center;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border);
-            padding-top: 1rem;
+            margin-top: 3rem; text-align: center; font-size: 0.8rem; color: var(--text-muted);
+            border-top: 1px solid var(--border-color); padding-top: 1.5rem;
         }
     </style>
 </head>
@@ -163,66 +194,93 @@
 
     <div class="container">
         <h1>Kalkulator Nilai UAS</h1>
-        <p class="subtitle">Semester 3 - Sistem Informasi</p>
+        <p class="subtitle">Sistem Informasi - Skema Grade Terbaru</p>
 
         <form id="calcForm">
             <div class="form-group">
                 <label for="course">Mata Kuliah</label>
-                <select id="course" required onchange="updateInfo()">
-                    <option value="pbd">Pemrograman Berbasis Desktop</option>
-                    <option value="so">Sistem Operasi</option>
-                    <option value="bed">Belajar di Era Digital</option>
-                    <option value="stat">Pengantar Statistika</option>
-                </select>
-                <small id="weight-info" style="color: var(--primary); font-size: 0.75rem; display: block; margin-top: 5px;">
+                <div class="select-wrapper">
+                    <select id="course" required onchange="updateInfo()">
+                        <option value="pbd">Pemrograman Berbasis Desktop</option>
+                        <option value="so">Sistem Operasi</option>
+                        <option value="bed">Belajar di Era Digital</option>
+                        <option value="stat">Pengantar Statistika</option>
+                    </select>
+                </div>
+                <small id="weight-info" class="helper-text">
                     Bobot: Ujian 50% | Tugas 50%
                 </small>
             </div>
 
             <div class="form-group">
-                <label for="totalQuestions">Jumlah Soal Ujian</label>
-                <select id="totalQuestions">
-                    <option value="30">30 Soal</option>
-                    <option value="35">35 Soal</option>
-                    <option value="40">40 Soal</option>
-                    <option value="45">45 Soal</option>
-                    <option value="50">50 Soal</option>
-                </select>
+                <label for="difficulty">Tingkat Kesulitan</label>
+                <div class="select-wrapper">
+                    <select id="difficulty" onchange="updateGradeSchemePreview()">
+                        <option value="mudah" selected>Mudah (Standar)</option>
+                        <option value="sedang">Sedang</option>
+                        <option value="sulit">Sulit</option>
+                    </select>
+                </div>
+                <small id="scheme-preview" class="helper-text" style="color: var(--text-muted)">
+                    Preview batas nilai...
+                </small>
             </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="totalQuestions">Total Soal</label>
+                    <div class="select-wrapper">
+                        <select id="totalQuestions">
+                            <option value="30">30</option>
+                            <option value="35">35</option>
+                            <option value="40">40</option>
+                            <option value="45" selected>45</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="form-group">
+                    <label for="correctAnswers">Jawaban Benar</label>
+                    <input type="number" id="correctAnswers" placeholder="Misal: 35" min="0" required>
+                </div>
+            </div>
+
 
             <div class="form-group">
-                <label for="correctAnswers">Jumlah Jawaban Benar</label>
-                <input type="number" id="correctAnswers" placeholder="Contoh: 25" min="0" required>
+                <label for="taskScore">Nilai Tugas (E-Learning)</label>
+                <input type="number" id="taskScore" placeholder="Misal: 90" min="0" max="100" required>
             </div>
 
-            <div class="form-group">
-                <label for="taskScore">Nilai Tugas (Tutorial/E-Learning)</label>
-                <input type="number" id="taskScore" placeholder="Contoh: 85" min="0" max="100" required>
-            </div>
-
-            <button type="submit">Hitung Nilai & Grade</button>
+            <button type="submit">HITUNG NILAI SEKARANG</button>
         </form>
 
         <div id="result-card">
-            <p class="score-sub">Nilai Akhir Anda</p>
-            <div id="finalScoreDisplay" class="score-detail" style="font-size: 2rem;">0</div>
-            <div id="gradeDisplay" class="grade-badge">-</div>
-            <p id="gradeText" class="score-sub" style="font-weight: bold;">-</p>
+            <p class="score-sub">Nilai Akhir Berdasarkan Bobot</p>
+            <div id="finalScoreDisplay" class="score-detail" data-target="0">0.00</div>
+            
+            <div id="gradeWrapper">
+                <span id="gradeDisplay" class="grade-badge">-</span>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <span class="info-tag" id="qualityPointDisplay">Angka Mutu: 0</span>
+            </div>
+            
+            <p id="gradeText" style="font-weight: 700; font-size: 1.1rem;">-</p>
 
             <div class="explanation">
-                <h3>Rincian Perhitungan:</h3>
-                <ul id="calculationSteps">
-                    </ul>
-                <div style="margin-top: 10px; border-top: 1px dashed #ccc; padding-top:5px;">
-                    <strong>Skala Grade:</strong><br>
-                    A (80-100), B (70-79), C (55-69), D (40-54), E (<40)
+                <h3>Rincian Kalkulasi:</h3>
+                <ul id="calculationSteps"></ul>
+                <div style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top:10px; font-size: 0.75rem;">
+                    <strong>Skema Grade Terpilih:</strong><br>
+                    <span id="gradeSchemeDetail" style="color: var(--text-muted)">Loading...</span>
                 </div>
             </div>
         </div>
 
         <footer>
-            &copy; 2025 - Kalkulator Nilai UAS Semester 3 Sistem Informasi<br>
-            Dibuat oleh <strong>Sefrian Noer Fadillah</strong>
+            &copy; 2025 Developed with <span style="color: var(--danger-color)">❤</span> by <strong>Sefrian Noer Fadillah</strong>
         </footer>
     </div>
 
@@ -235,94 +293,154 @@
             stat: { name: "Pengantar Statistika", examWeight: 0.7, taskWeight: 0.3 }
         };
 
-        // Update info bobot saat matkul diganti
+        // Data Range Grade
+        const gradingSchemes = {
+            mudah: [
+                { min: 80, grade: 'A', weight: 4.0, css: 'color-A', status: 'Sangat Baik (Lulus)' },
+                { min: 75, grade: 'A-', weight: 3.5, css: 'color-A', status: 'Sangat Baik (Lulus)' },
+                { min: 70, grade: 'B', weight: 3.0, css: 'color-B', status: 'Baik (Lulus)' },
+                { min: 60, grade: 'B-', weight: 2.5, css: 'color-B', status: 'Baik (Lulus)' },
+                { min: 55, grade: 'C', weight: 2.0, css: 'color-C', status: 'Cukup (Lulus)' },
+                { min: 50, grade: 'C-', weight: 1.5, css: 'color-C', status: 'Cukup (Lulus)' },
+                { min: 40, grade: 'D', weight: 1.0, css: 'color-D', status: 'Kurang (Mengulang)' },
+                { min: 0,  grade: 'E', weight: 0.0, css: 'color-E', status: 'Gagal (Wajib Mengulang)' }
+            ],
+            sedang: [
+                { min: 75, grade: 'A', weight: 4.0, css: 'color-A', status: 'Sangat Baik (Lulus)' },
+                { min: 70, grade: 'A-', weight: 3.5, css: 'color-A', status: 'Sangat Baik (Lulus)' },
+                { min: 65, grade: 'B', weight: 3.0, css: 'color-B', status: 'Baik (Lulus)' },
+                { min: 55, grade: 'B-', weight: 2.5, css: 'color-B', status: 'Baik (Lulus)' },
+                { min: 50, grade: 'C', weight: 2.0, css: 'color-C', status: 'Cukup (Lulus)' },
+                { min: 45, grade: 'C-', weight: 1.5, css: 'color-C', status: 'Cukup (Lulus)' },
+                { min: 35, grade: 'D', weight: 1.0, css: 'color-D', status: 'Kurang (Mengulang)' },
+                { min: 0,  grade: 'E', weight: 0.0, css: 'color-E', status: 'Gagal (Wajib Mengulang)' }
+            ],
+            sulit: [
+                { min: 70, grade: 'A', weight: 4.0, css: 'color-A', status: 'Sangat Baik (Lulus)' },
+                { min: 65, grade: 'A-', weight: 3.5, css: 'color-A', status: 'Sangat Baik (Lulus)' },
+                { min: 60, grade: 'B', weight: 3.0, css: 'color-B', status: 'Baik (Lulus)' },
+                { min: 50, grade: 'B-', weight: 2.5, css: 'color-B', status: 'Baik (Lulus)' },
+                { min: 45, grade: 'C', weight: 2.0, css: 'color-C', status: 'Cukup (Lulus)' },
+                { min: 40, grade: 'C-', weight: 1.5, css: 'color-C', status: 'Cukup (Lulus)' },
+                { min: 30, grade: 'D', weight: 1.0, css: 'color-D', status: 'Kurang (Mengulang)' },
+                { min: 0,  grade: 'E', weight: 0.0, css: 'color-E', status: 'Gagal (Wajib Mengulang)' }
+            ]
+        };
+
         function updateInfo() {
             const courseKey = document.getElementById('course').value;
             const data = courses[courseKey];
-            const infoText = `Bobot: Ujian ${data.examWeight * 100}% | Tugas ${data.taskWeight * 100}%`;
-            document.getElementById('weight-info').textContent = infoText;
+            document.getElementById('weight-info').textContent = `Bobot: Ujian ${data.examWeight * 100}% | Tugas ${data.taskWeight * 100}%`;
         }
 
-        // Logic Perhitungan
+        function updateGradeSchemePreview() {
+            const difficulty = document.getElementById('difficulty').value;
+            const scheme = gradingSchemes[difficulty];
+            const minA = scheme.find(g => g.grade === 'A').min;
+            const minC = scheme.find(g => g.grade === 'C').min;
+            document.getElementById('scheme-preview').textContent = `Info: Minimal A = ${minA}, Minimal Lulus (C) = ${minC}`;
+            
+            let detailHtml = '';
+            scheme.forEach(item => { detailHtml += `${item.grade} (≥${item.min}) | `; });
+            document.getElementById('gradeSchemeDetail').textContent = detailHtml.slice(0, -3);
+        }
+
+        // --- NEW: Animation Function for counting numbers ---
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                // easeOutQuad blending
+                const easedProgress = 1 - (1 - progress) * (1 - progress); 
+                let currentVal = (easedProgress * (end - start) + start);
+                obj.innerHTML = currentVal.toFixed(2);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                     obj.innerHTML = end.toFixed(2); // Ensure final value is precise
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
         document.getElementById('calcForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Ambil Value
+            // 1. Gather & Validate Data
             const courseKey = document.getElementById('course').value;
+            const difficulty = document.getElementById('difficulty').value;
             const totalQuestions = parseInt(document.getElementById('totalQuestions').value);
             const correctAnswers = parseFloat(document.getElementById('correctAnswers').value);
             const taskScore = parseFloat(document.getElementById('taskScore').value);
 
-            // Validasi Input
-            if (correctAnswers > totalQuestions) {
-                alert("Jumlah jawaban benar tidak boleh lebih dari total soal!");
-                return;
-            }
-            if (taskScore > 100) {
-                alert("Nilai tugas tidak boleh lebih dari 100!");
-                return;
-            }
+            if (correctAnswers > totalQuestions) { alert("Jawaban benar melebihi total soal!"); return; }
+            if (taskScore > 100 || taskScore < 0) { alert("Nilai tugas tidak valid (0-100)!"); return; }
+            if (isNaN(correctAnswers) || isNaN(taskScore)) { alert("Mohon isi semua data angka!"); return; }
 
-            // Hitung Nilai Ujian Murni (Skala 100)
+            // 2. Calculations
             const rawExamScore = (correctAnswers / totalQuestions) * 100;
-
-            // Ambil Bobot
             const examWeight = courses[courseKey].examWeight;
             const taskWeight = courses[courseKey].taskWeight;
-
-            // Hitung Kontribusi
             const examContribution = rawExamScore * examWeight;
             const taskContribution = taskScore * taskWeight;
-
-            // Nilai Akhir
             const finalScore = examContribution + taskContribution;
-            const finalScoreRounded = finalScore.toFixed(2);
 
-            // Tentukan Grade
-            let grade = '';
-            let gradeClass = '';
-            let gradeStatus = '';
+            // 3. Determine Grade
+            const scheme = gradingSchemes[difficulty];
+            let resultData = scheme.find(item => finalScore >= item.min) || scheme[scheme.length - 1];
 
-            if (finalScore >= 80) {
-                grade = 'A'; gradeClass = 'grade-A'; gradeStatus = 'Sangat Memuaskan (Lulus)';
-            } else if (finalScore >= 70) {
-                grade = 'B'; gradeClass = 'grade-B'; gradeStatus = 'Memuaskan (Lulus)';
-            } else if (finalScore >= 55) {
-                grade = 'C'; gradeClass = 'grade-C'; gradeStatus = 'Cukup (Lulus)';
-            } else if (finalScore >= 40) {
-                grade = 'D'; gradeClass = 'grade-D'; gradeStatus = 'Kurang (Cek Ketentuan Mengulang)';
-            } else {
-                grade = 'E'; gradeClass = 'grade-E'; gradeStatus = 'Gagal (Wajib Mengulang)';
-            }
-
-            // Tampilkan Hasil
+            // 4. Prepare UI Elements
             const resultCard = document.getElementById('result-card');
             const finalDisplay = document.getElementById('finalScoreDisplay');
             const gradeDisplay = document.getElementById('gradeDisplay');
+            const qualityPointDisplay = document.getElementById('qualityPointDisplay');
             const gradeText = document.getElementById('gradeText');
             const calcSteps = document.getElementById('calculationSteps');
 
-            finalDisplay.textContent = finalScoreRounded;
-            gradeDisplay.textContent = grade;
-            gradeDisplay.className = 'grade-badge ' + gradeClass;
-            gradeText.textContent = gradeStatus;
-
-            // Isi Penjelasan
-            calcSteps.innerHTML = `
-                <li><strong>Nilai Murni Ujian:</strong> ${rawExamScore.toFixed(2)} (Benar ${correctAnswers}/${totalQuestions})</li>
-                <li><strong>Kontribusi Ujian (${examWeight*100}%):</strong> ${examContribution.toFixed(2)}</li>
-                <li><strong>Kontribusi Tugas (${taskWeight*100}%):</strong> ${taskContribution.toFixed(2)}</li>
-                <li><strong>Total:</strong> ${examContribution.toFixed(2)} + ${taskContribution.toFixed(2)} = <strong>${finalScoreRounded}</strong></li>
-            `;
-
+            // Reset animations before showing
             resultCard.style.display = 'block';
+            resultCard.classList.remove('result-enter-active');
+            gradeDisplay.classList.remove('grade-pop-in');
+            void resultCard.offsetWidth; // Trigger reflow
             
-            // Scroll ke hasil
-            resultCard.scrollIntoView({ behavior: 'smooth' });
+            // Apply entrance animation class
+            resultCard.classList.add('result-enter-active');
+            
+            // Scroll smoothly to result
+            setTimeout(() => {
+                resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+
+            // 5. Trigger Data & Animations
+            // Start number count animation (duration 1500ms)
+            animateValue(finalDisplay, 0, finalScore, 1500);
+
+            // Set Grade Text data
+            gradeDisplay.textContent = resultData.grade;
+            gradeDisplay.className = 'grade-badge ' + resultData.css;
+            
+            // Trigger Grade Pop-in Animation after short delay
+            setTimeout(() => {
+                gradeDisplay.classList.add('grade-pop-in');
+            }, 100);
+
+            qualityPointDisplay.textContent = `Angka Mutu: ${resultData.weight}`;
+            gradeText.textContent = resultData.status;
+            gradeText.className = resultData.css;
+
+            // Fill explanation
+            calcSteps.innerHTML = `
+                <li>Ujian Murni: <strong>${rawExamScore.toFixed(1)}</strong> (Benar ${correctAnswers}/${totalQuestions})</li>
+                <li>Kontribusi Ujian (${examWeight*100}%): <strong>${examContribution.toFixed(2)}</strong></li>
+                <li>Kontribusi Tugas (${taskWeight*100}%): <strong>${taskContribution.toFixed(2)}</strong></li>
+                <li>Total Akhir: ${examContribution.toFixed(1)} + ${taskContribution.toFixed(1)} = <strong>${finalScore.toFixed(2)}</strong></li>
+            `;
         });
 
-        // Initialize info on load
+        // Initialize on load
         updateInfo();
+        updateGradeSchemePreview();
     </script>
 </body>
 </html>
