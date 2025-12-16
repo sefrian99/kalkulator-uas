@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Nilai UAS Semester 3 Sistem Informasi</title>
+    <style>
+        /* CSS Reset & Variables */
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Container */
+        .container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Header */
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        /* Form Elements */
+        .form-group { margin-bottom: 1.25rem; }
+        
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+            background-color: #fff;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 1rem;
+        }
+
+        button:hover { background-color: var(--primary-hover); }
+
+        /* Result Section */
+        #result-card {
+            display: none; /* Hidden by default */
+            margin-top: 2rem;
+            background-color: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .grade-badge {
+            display: inline-block;
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1;
+            margin: 1rem 0;
+        }
+
+        .score-detail { font-size: 1.125rem; font-weight: 600; color: var(--text-main); }
+        .score-sub { font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        /* Colors for Grades */
+        .grade-A { color: var(--success); }
+        .grade-B { color: var(--primary); }
+        .grade-C { color: var(--warning); }
+        .grade-D { color: #d97706; }
+        .grade-E { color: var(--danger); }
+
+        /* Explanation */
+        .explanation {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: #fff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px dashed var(--border);
+            text-align: left;
+        }
+        
+        .explanation h3 { font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-main); }
+        .explanation ul { padding-left: 1.2rem; }
+        .explanation li { margin-bottom: 0.25rem; }
+
+        /* Footer */
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Kalkulator Nilai UAS</h1>
+        <p class="subtitle">Semester 3 - Sistem Informasi</p>
+
+        <form id="calcForm">
+            <div class="form-group">
+                <label for="course">Mata Kuliah</label>
+                <select id="course" required onchange="updateInfo()">
+                    <option value="pbd">Pemrograman Berbasis Desktop</option>
+                    <option value="so">Sistem Operasi</option>
+                    <option value="bed">Belajar di Era Digital</option>
+                    <option value="stat">Pengantar Statistika</option>
+                </select>
+                <small id="weight-info" style="color: var(--primary); font-size: 0.75rem; display: block; margin-top: 5px;">
+                    Bobot: Ujian 50% | Tugas 50%
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="totalQuestions">Jumlah Soal Ujian</label>
+                <select id="totalQuestions">
+                    <option value="30">30 Soal</option>
+                    <option value="35">35 Soal</option>
+                    <option value="40">40 Soal</option>
+                    <option value="45">45 Soal</option>
+                    <option value="50">50 Soal</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="correctAnswers">Jumlah Jawaban Benar</label>
+                <input type="number" id="correctAnswers" placeholder="Contoh: 25" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="taskScore">Nilai Tugas (Tutorial/E-Learning)</label>
+                <input type="number" id="taskScore" placeholder="Contoh: 85" min="0" max="100" required>
+            </div>
+
+            <button type="submit">Hitung Nilai & Grade</button>
+        </form>
+
+        <div id="result-card">
+            <p class="score-sub">Nilai Akhir Anda</p>
+            <div id="finalScoreDisplay" class="score-detail" style="font-size: 2rem;">0</div>
+            <div id="gradeDisplay" class="grade-badge">-</div>
+            <p id="gradeText" class="score-sub" style="font-weight: bold;">-</p>
+
+            <div class="explanation">
+                <h3>Rincian Perhitungan:</h3>
+                <ul id="calculationSteps">
+                    </ul>
+                <div style="margin-top: 10px; border-top: 1px dashed #ccc; padding-top:5px;">
+                    <strong>Skala Grade:</strong><br>
+                    A (80-100), B (70-79), C (55-69), D (40-54), E (<40)
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2025 - Kalkulator Nilai UAS Semester 3 Sistem Informasi<br>
+            Dibuat oleh <strong>Sefrian Noer Fadillah</strong>
+        </footer>
+    </div>
+
+    <script>
+        // Data Bobot Mata Kuliah
+        const courses = {
+            pbd: { name: "Pemrograman Berbasis Desktop", examWeight: 0.5, taskWeight: 0.5 },
+            so: { name: "Sistem Operasi", examWeight: 0.7, taskWeight: 0.3 },
+            bed: { name: "Belajar di Era Digital", examWeight: 0.7, taskWeight: 0.3 },
+            stat: { name: "Pengantar Statistika", examWeight: 0.7, taskWeight: 0.3 }
+        };
+
+        // Update info bobot saat matkul diganti
+        function updateInfo() {
+            const courseKey = document.getElementById('course').value;
+            const data = courses[courseKey];
+            const infoText = `Bobot: Ujian ${data.examWeight * 100}% | Tugas ${data.taskWeight * 100}%`;
+            document.getElementById('weight-info').textContent = infoText;
+        }
+
+        // Logic Perhitungan
+        document.getElementById('calcForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Ambil Value
+            const courseKey = document.getElementById('course').value;
+            const totalQuestions = parseInt(document.getElementById('totalQuestions').value);
+            const correctAnswers = parseFloat(document.getElementById('correctAnswers').value);
+            const taskScore = parseFloat(document.getElementById('taskScore').value);
+
+            // Validasi Input
+            if (correctAnswers > totalQuestions) {
+                alert("Jumlah jawaban benar tidak boleh lebih dari total soal!");
+                return;
+            }
+            if (taskScore > 100) {
+                alert("Nilai tugas tidak boleh lebih dari 100!");
+                return;
+            }
+
+            // Hitung Nilai Ujian Murni (Skala 100)
+            const rawExamScore = (correctAnswers / totalQuestions) * 100;
+
+            // Ambil Bobot
+            const examWeight = courses[courseKey].examWeight;
+            const taskWeight = courses[courseKey].taskWeight;
+
+            // Hitung Kontribusi
+            const examContribution = rawExamScore * examWeight;
+            const taskContribution = taskScore * taskWeight;
+
+            // Nilai Akhir
+            const finalScore = examContribution + taskContribution;
+            const finalScoreRounded = finalScore.toFixed(2);
+
+            // Tentukan Grade
+            let grade = '';
+            let gradeClass = '';
+            let gradeStatus = '';
+
+            if (finalScore >= 80) {
+                grade = 'A'; gradeClass = 'grade-A'; gradeStatus = 'Sangat Memuaskan (Lulus)';
+            } else if (finalScore >= 70) {
+                grade = 'B'; gradeClass = 'grade-B'; gradeStatus = 'Memuaskan (Lulus)';
+            } else if (finalScore >= 55) {
+                grade = 'C'; gradeClass = 'grade-C'; gradeStatus = 'Cukup (Lulus)';
+            } else if (finalScore >= 40) {
+                grade = 'D'; gradeClass = 'grade-D'; gradeStatus = 'Kurang (Cek Ketentuan Mengulang)';
+            } else {
+                grade = 'E'; gradeClass = 'grade-E'; gradeStatus = 'Gagal (Wajib Mengulang)';
+            }
+
+            // Tampilkan Hasil
+            const resultCard = document.getElementById('result-card');
+            const finalDisplay = document.getElementById('finalScoreDisplay');
+            const gradeDisplay = document.getElementById('gradeDisplay');
+            const gradeText = document.getElementById('gradeText');
+            const calcSteps = document.getElementById('calculationSteps');
+
+            finalDisplay.textContent = finalScoreRounded;
+            gradeDisplay.textContent = grade;
+            gradeDisplay.className = 'grade-badge ' + gradeClass;
+            gradeText.textContent = gradeStatus;
+
+            // Isi Penjelasan
+            calcSteps.innerHTML = `
+                <li><strong>Nilai Murni Ujian:</strong> ${rawExamScore.toFixed(2)} (Benar ${correctAnswers}/${totalQuestions})</li>
+                <li><strong>Kontribusi Ujian (${examWeight*100}%):</strong> ${examContribution.toFixed(2)}</li>
+                <li><strong>Kontribusi Tugas (${taskWeight*100}%):</strong> ${taskContribution.toFixed(2)}</li>
+                <li><strong>Total:</strong> ${examContribution.toFixed(2)} + ${taskContribution.toFixed(2)} = <strong>${finalScoreRounded}</strong></li>
+            `;
+
+            resultCard.style.display = 'block';
+            
+            // Scroll ke hasil
+            resultCard.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Initialize info on load
+        updateInfo();
+    </script>
+</body>
+</html>
